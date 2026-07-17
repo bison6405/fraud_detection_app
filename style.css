@@ -1,0 +1,57 @@
+body {
+    background-color: #f4f6f9;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Title styling */
+.title {
+    color: #2c3e50;
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+/* Prediction box */
+.prediction-box {
+    background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect */
+.prediction-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Fraud alert glow */
+.fraud-alert {
+    background: linear-gradient(135deg, #ff4e50 0%, #f9d423 100%);
+    animation: pulse 1.5s infinite;
+}
+
+/* Legitimate alert glow */
+.legit-alert {
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+    animation: fadeIn 2s ease-in-out;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { box-shadow: 0 0 10px #ff4e50; }
+    50% { box-shadow: 0 0 20px #f9d423; }
+    100% { box-shadow: 0 0 10px #ff4e50; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
