@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import numpy as np
+import plotly.graph_objects as go
 
 # ✅ Load pipeline model
 model = joblib.load("fraud_pipeline.pkl")
@@ -14,6 +16,14 @@ st.markdown("<div class='title'>💳 Fraud Detection Dashboard</div>", unsafe_al
 
 # Tabs
 tab1, tab2 = st.tabs(["📝 Transaction Form", "📊 Prediction Result"])
+
+# Ensure session state key exists
+if "input_df" not in st.session_state:
+    st.session_state["input_df"] = None
+if "prediction" not in st.session_state:
+    st.session_state["prediction"] = None
+if "probability" not in st.session_state:
+    st.session_state["probability"] = None
 
 with tab1:
     st.header("Enter Transaction Details")
@@ -54,16 +64,22 @@ with tab1:
 
     input_df = pd.DataFrame([input_data], columns=expected_order)
 
-    # Save to session state so tab2 can access it
-    st.session_state["input_df"] = input_df
+    # Prediction button now in Tab1
+    if st.button("Predict Fraud"):
+        st.session_state["input_df"] = input_df
+        prediction = model.predict(input_df)[0]
+        probability = model.predict_proba(input_df)[0][1]
+        st.session_state["prediction"] = prediction
+        st.session_state["probability"] = probability
+        st.success("Prediction complete! Switch to the 'Prediction Result' tab to view details.")
 
 with tab2:
     st.header("Prediction Result")
 
-    if "input_df" in st.session_state and st.button("Predict Fraud"):
+    if st.session_state["input_df"] is not None and st.session_state["prediction"] is not None:
         input_df = st.session_state["input_df"]
-        prediction = model.predict(input_df)[0]
-        probability = model.predict_proba(input_df)[0][1]
+        prediction = st.session_state["prediction"]
+        probability = st.session_state["probability"]
 
         # Show transaction summary
         st.markdown("#### Transaction Summary")
@@ -83,7 +99,6 @@ with tab2:
             st.progress(int(probability * 100))
 
             # Gauge chart for fraud probability
-            import plotly.graph_objects as go
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=probability * 100,
@@ -100,7 +115,6 @@ with tab2:
             st.progress(int((1 - probability) * 100))
 
             # Gauge chart for legit confidence
-            import plotly.graph_objects as go
             fig = go.Figure(go.Indicator(
                 mode="gauge+number",
                 value=(1 - probability) * 100,
