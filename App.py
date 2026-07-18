@@ -122,3 +122,20 @@ with tab2:
                 gauge={'axis': {'range': [0, 100]}}
             ))
             st.plotly_chart(fig, use_container_width=True)
+        # 📘 Explainer box
+        with st.expander("How is this prediction calculated?"):
+            st.write("""
+            The fraud detection model is based on **logistic regression**:
+
+            1. Your inputs (amount, balances, transaction type, etc.) are converted into numerical features.
+            2. Each feature is multiplied by a learned weight (from training).
+            3. These values are added together with a bias term:
+               z = w1*x1 + w2*x2 + ... + wn*xn + b
+            4. The result is passed through a sigmoid function:
+               P(fraud) = 1 / (1 + e^(-z))
+            5. This gives a probability between 0 and 1.
+            6. If probability ≥ 0.5 → Fraud, else Legitimate.
+
+            The confidence score you see is exactly this probability.
+            """)
+
